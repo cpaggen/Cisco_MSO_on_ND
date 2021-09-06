@@ -1,0 +1,31 @@
+-
+  name: testing MSO on ND
+  hosts: localhost
+  gather_facts: no
+  vars:
+    mso_info: &mso_info
+      host: '{{ mso_host }}'
+      username: '{{ mso_user }}'
+      password: '{{ mso_password }}'
+      validate_certs: no
+  tasks:
+    - include_vars: msoOnNd_vars.yaml
+
+    - name: Get Tenant ID
+      cisco.mso.mso_tenant:
+        <<: *mso_info
+        tenant: "testing"
+        state: query
+      register: result_tenant
+
+    - debug:
+        msg:  "{{ result_tenant.current.id }}"
+
+    - name: Add cloud template
+      cisco.mso.mso_schema_template:
+        <<: *mso_info
+        tenant: "testing"
+        template: "ansible-nd-tpl"
+        schema: "ansible-nd-schema"
+        state: present
+      delegate_to: localhost

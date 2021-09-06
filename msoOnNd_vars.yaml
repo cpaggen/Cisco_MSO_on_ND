@@ -1,0 +1,12 @@
+mso_host: '192.168.10.160'
+mso_user: 'admin'
+mso_password: 'cisco123!'
+
+ansible_connection: ansible.netcommon.httpapi
+ansible_network_os: cisco.nd.nd
+
+ansible_user: admin
+ansible_ssh_pass: cisco123!
+ansible_httpapi_validate_certs: False
+ansible_httpapi_use_ssl: True
+ansible_httpapi_use_proxy: False

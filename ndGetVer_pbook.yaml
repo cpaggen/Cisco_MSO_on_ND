@@ -1,0 +1,11 @@
+-
+  name: testing MSO on ND
+  hosts: 192.168.10.160
+  gather_facts: no
+  tasks:
+    - include_vars: msoOnNd_vars.yaml
+
+  tasks:
+  - name: Get ND version
+    cisco.nd.nd_version:
+      state: query
