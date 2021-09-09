@@ -1,0 +1,40 @@
+-
+  name: testing PATCH on MSO on ND
+  hosts: localhost
+  gather_facts: no
+  vars:
+    mso_info: &mso_info
+      host: '{{ mso_host }}'
+      username: '{{ mso_user }}'
+      password: '{{ mso_password }}'
+      validate_certs: no
+  tasks:
+    - include_vars: msoOnNd_vars.yaml
+
+    - name: Get Tenant ID
+      cisco.mso.mso_tenant:
+        <<: *mso_info
+        tenant: "testing"
+        state: query
+      register: result_tenant
+      delegate_to: localhost
+
+    - debug:
+        msg:  "{{ result_tenant.current.id }}"
+    - name: Add a new static port to a site EPG
+      cisco.mso.mso_schema_site_anp_epg_staticport:
+        <<: *mso_info
+        schema: testSchema
+        site: Matze
+        template: testTemplate
+        anp: ap1
+        epg: epg1
+        type: port
+        pod: pod-1
+        leaf: 101
+        path: eth1/6
+        vlan: 666
+        deployment_immediacy: lazy
+        state: present
+        output_level: debug
+      delegate_to: localhost
